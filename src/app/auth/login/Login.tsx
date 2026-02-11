@@ -26,7 +26,7 @@ export default function Login() {
     }
 
     return (
-        <div>
+        <div className='mt-30 mb-30'>
             <h2 className='text-green-700 text-2xl text-center mb-6'>Login Now</h2>
             <Form {...form}>
                 <form className='w-2/3 mx-auto' onSubmit={form.handleSubmit(onsubmit)}>
