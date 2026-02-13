@@ -27,14 +27,13 @@ Key highlights:
 
 The event concluded with the signing of 4 international collaboration agreements and a student hackathon prize ceremony.
     `,
-    image: "/news/ai-conference-hero.jpg", // add real image later
+    image: "/public/slider/university1.webp", // add real image later
   },
   {
     slug: "sports-day",
     title: "Annual Sports Day",
     category: "Sports",
     date: "November 20, 2025",
-    readTime: "6 min read",
     author: "Sports Committee",
     excerpt: "Students participated in various sports competitions during the annual sports day, promoting teamwork, health, and university spirit across all faculties.",
     fullContent: `
@@ -55,7 +54,6 @@ Winners received trophies and medals during the closing ceremony attended by the
     title: "Annual Fun Day",
     category: "Campus Life",
     date: "December 5, 2025",
-    readTime: "5 min read",
     author: "Student Activities",
     excerpt: "A day full of games, music, food stalls and entertainment for all students and staff.",
     fullContent: `
@@ -118,10 +116,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                 <CalendarDays size={18} />
                 {article.date}
               </div>
-              <div className="flex items-center gap-2">
-                <Clock size={18} />
-                {article.readTime}
-              </div>
+              
               <div className="flex items-center gap-2">
                 <span>By</span>
                 <span className="font-medium">{article.author}</span>

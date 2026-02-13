@@ -32,6 +32,15 @@ const newsList = [
   },
 ]
 
+const categories = [
+  { slug: "events", title: "Campus Events", icon: "🎉" },
+  { slug: "sports", title: "Sports", icon: "⚽" },
+  { slug: "technology", title: "Technology", icon: "💻" },
+  { slug: "research", title: "Research", icon: "🔬" },
+  { slug: "announcements", title: "Announcements", icon: "📢" },
+  { slug: "clubs", title: "Student Clubs", icon: "👥" },
+]
+
 export default function Home() {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -87,7 +96,7 @@ We look forward to welcoming you to the new semester!`
                     Your university's central hub for real-time news, events and announcements.
                   </p>
 
-                
+
                 </div>
               </div>
             </SwiperSlide>
@@ -189,6 +198,48 @@ We look forward to welcoming you to the new semester!`
             <Button variant="outline" size="lg" asChild>
               <Link href="/news">
                 View All News →
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+      {/* Explore Categories Section */}
+      <section className="py-16 md:py-20 px-6 bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+              Explore by Category
+            </h2>
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
+              Discover news tailored to your interests — click any category to see all related updates.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+            {categories.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/categories/${cat.slug}`}
+                className="group relative bg-white dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-indigo-400 dark:hover:border-indigo-500"
+              >
+                {/* Optional gradient accent on hover */}
+                <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-indigo-500/0 to-blue-500/0 group-hover:from-indigo-500/5 group-hover:to-blue-500/5 transition-opacity" />
+
+                {/* Icon / emoji */}
+                <div className="text-4xl md:text-5xl mb-4">{cat.icon}</div>
+
+                <h3 className="font-semibold text-lg text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  {cat.title}
+                </h3>
+              </Link>
+            ))}
+          </div>
+
+          {/* Optional "View all categories" button */}
+          <div className="text-center mt-10">
+            <Button variant="outline" size="lg" asChild>
+              <Link href="/categories">
+                See All Categories →
               </Link>
             </Button>
           </div>

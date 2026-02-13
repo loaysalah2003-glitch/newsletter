@@ -63,7 +63,7 @@ export default function AllNewsPage() {
   const paginatedNews = allNews.slice(startIndex, startIndex + itemsPerPage)
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-16 md:py-20 px-5 sm:px-8 lg:px-12">
+    <div className="relative min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-16 md:py-20 px-5 sm:px-8 lg:px-12">
       {/* Background decoration */}
       <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
         <div className="absolute top-20 left-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse-slow" />
@@ -73,7 +73,7 @@ export default function AllNewsPage() {
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Page header */}
         <div className="text-center mb-12 md:mb-16">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 bg-clip-text text-transparent mb-5">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight bg-linear-to-r from-indigo-600 via-purple-600 to-blue-600 bg-clip-text text-transparent mb-5">
             All University News
           </h1>
 
@@ -90,7 +90,7 @@ export default function AllNewsPage() {
               className="group bg-white dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/70 dark:border-slate-700/50 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
             >
               {/* Image placeholder */}
-              <div className="relative h-48 md:h-56 bg-gradient-to-br from-indigo-100 to-blue-100 dark:from-slate-700 dark:to-slate-600">
+              <div className="relative h-48 md:h-56 bg-linear-to-br from-indigo-100 to-blue-100 dark:from-slate-700 dark:to-slate-600">
                 <div className="absolute inset-0 flex items-center justify-center text-slate-400 dark:text-slate-500 text-sm font-medium">
                   [News Image]
                 </div>
