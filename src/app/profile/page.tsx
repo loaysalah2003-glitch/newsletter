@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Pencil, Save, Mail, Lock, Phone, GraduationCap, Newspaper, ShieldCheck } from "lucide-react"
+import { Pencil, Save, Mail, Lock, Phone, GraduationCap, Newspaper, ShieldCheck, User } from "lucide-react"
+import Link from 'next/link'
 
 // Map category slugs → display names (same as in register page)
 const categoryLabels: Record<string, string> = {
@@ -19,21 +20,21 @@ const categoryLabels: Record<string, string> = {
 export default function ProfilePage() {
   const router = useRouter()
 
-  // Phone editing state
   const [phone, setPhone] = useState("01234567890")
   const [tempPhone, setTempPhone] = useState(phone)
   const [isEditingPhone, setIsEditingPhone] = useState(false)
 
-  // Profile data from registration (name + major)
   const [userName, setUserName] = useState("Guest User")
   const [userMajor, setUserMajor] = useState("")
-
-  // News preferences from registration
   const [interests, setInterests] = useState<string[]>([])
+  const [isGuest, setIsGuest] = useState(true)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Load profile data (name + major)
     const savedProfile = localStorage.getItem('userProfile')
+    const savedInterests = localStorage.getItem('userNewsPreferences')
+    const guestFlag = localStorage.getItem('isGuest') === 'true'
+
     if (savedProfile) {
       try {
         const parsed = JSON.parse(savedProfile)
@@ -48,13 +49,12 @@ export default function ProfilePage() {
           }
           setUserMajor(majorMap[parsed.major] || parsed.major)
         }
+        setIsGuest(false)
       } catch (err) {
         console.error("Failed to load profile data", err)
       }
     }
 
-    // Load news preferences
-    const savedInterests = localStorage.getItem('userNewsPreferences')
     if (savedInterests) {
       try {
         const parsed = JSON.parse(savedInterests)
@@ -65,6 +65,8 @@ export default function ProfilePage() {
         console.error("Failed to load news preferences", err)
       }
     }
+
+    setLoading(false)
   }, [])
 
   const handleSavePhone = () => {
@@ -77,8 +79,55 @@ export default function ProfilePage() {
     setIsEditingPhone(false)
   }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50/70 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+    )
+  }
+
+  // Guest mode UI
+  if (isGuest) {
+    return (
+      <div className="min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center px-6 py-16">
+        <div className="max-w-lg text-center space-y-8">
+          <div className="w-20 h-20 mx-auto rounded-full bg-indigo-100 dark:bg-indigo-950/50 flex items-center justify-center">
+            <User className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
+          </div>
+
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
+            Guest Mode
+          </h1>
+
+          <p className="text-lg text-slate-600 dark:text-slate-400">
+            You're currently browsing as a guest. To view and edit your profile, save preferences, and unlock personalized features, please sign up or log in.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild>
+              <Link href="/auth/register">
+                Sign Up Free
+              </Link>
+            </Button>
+            <Button variant="outline" size="lg" asChild>
+              <Link href="/auth/login">
+                Login
+              </Link>
+            </Button>
+          </div>
+
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-6">
+            You can still browse news, categories, and announcements without an account.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // Logged-in user profile
   return (
-    <div className="min-h-screen bg-slate-50/70 py-12 px-6 lg:px-8 mt-24 ">
+    <div className="min-h-screen bg-slate-50/70 py-12 px-6 lg:px-8 mt-24">
       <div className="mx-auto max-w-6xl">
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200/70 overflow-hidden">
 
@@ -113,23 +162,24 @@ export default function ProfilePage() {
               </div>
 
               <div className="flex gap-4 self-start md:self-center">
-                <Button variant="outline" size="lg">
+                <Button variant="outline" size="lg" onClick={() => {
+                  localStorage.clear()
+                  router.push('/')
+                }}>
                   Log Out
                 </Button>
-               
               </div>
             </div>
           </div>
 
           {/* Main content */}
           <div className="p-8 lg:p-10 space-y-10">
-
             {/* Row 1: Email + Password */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Email */}
               <div className="space-y-2">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2.5  rounded-lg">
+                  <div className="p-2.5 bg-indigo-100 rounded-lg">
                     <Mail size={20} className="text-indigo-600" />
                   </div>
                   <label className="text-lg font-semibold text-slate-800">
@@ -142,14 +192,13 @@ export default function ProfilePage() {
                     disabled
                     className="bg-transparent border-none focus-visible:ring-0 text-slate-700 text-base flex-1"
                   />
-                  
                 </div>
               </div>
 
               {/* Password */}
               <div className="space-y-2">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2.5  rounded-lg">
+                  <div className="p-2.5 bg-rose-100 rounded-lg">
                     <Lock size={20} className="text-rose-600" />
                   </div>
                   <label className="text-lg font-semibold text-slate-800">
@@ -175,7 +224,7 @@ export default function ProfilePage() {
               {/* Major */}
               <div className="space-y-2">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2.5  rounded-lg">
+                  <div className="p-2.5 bg-amber-100 rounded-lg">
                     <GraduationCap size={20} className="text-amber-600" />
                   </div>
                   <label className="text-lg font-semibold text-slate-800">
@@ -194,7 +243,7 @@ export default function ProfilePage() {
               {/* Phone */}
               <div className="space-y-2">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2.5  rounded-lg">
+                  <div className="p-2.5 bg-emerald-100 rounded-lg">
                     <Phone size={20} className="text-emerald-600" />
                   </div>
                   <label className="text-lg font-semibold text-slate-800">
@@ -286,9 +335,6 @@ export default function ProfilePage() {
                 </div>
               )}
             </div>
-
-            
-
           </div>
         </div>
       </div>

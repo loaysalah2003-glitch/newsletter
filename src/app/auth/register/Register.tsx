@@ -42,6 +42,7 @@ export default function Register() {
     defaultValues: {
       name: "",
       phone: "",
+      studentId: "",
       date: "",
       email: "",
       password: "",
@@ -55,6 +56,7 @@ export default function Register() {
     const isValid = await form.trigger([
       "name",
       "phone",
+      "studentId",
       "date",
       "email",
       "password",
@@ -79,7 +81,7 @@ export default function Register() {
 
   return (
     <div className='mt-20 pb-12'>
-      <h2 className='text-green-700 text-2xl font-bold text-center mb-8'>Register Now</h2>
+      <h2 className='text-green-700  text-3xl font-bold text-center mb-8'>Register Now</h2>
 
       <Form {...form}>
         <form className='w-full max-w-2xl mx-auto px-4' onSubmit={form.handleSubmit(onsubmit)}>
@@ -102,6 +104,25 @@ export default function Register() {
                   <FormMessage />
                 </FormItem>
               )} />
+
+              <FormField
+                name="studentId"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Student ID</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="e.g. 1010504"
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value.trim())}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
 
               <FormField name='date' control={form.control} render={({ field }) => (
                 <FormItem>
@@ -166,7 +187,7 @@ export default function Register() {
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg"
                   onClick={goNext}
                 >
-                  Continue to Interests →
+                  Continue  →
                 </Button>
               </div>
             </div>

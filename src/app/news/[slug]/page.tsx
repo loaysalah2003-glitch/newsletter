@@ -14,7 +14,7 @@ const newsData = [
     category: "Technology",
     date: "January 15, 2026",
     readTime: "8 min read",
-    author: "Dr. Ahmed Khalil",
+    author: "Dr. Hesham ElDeeb",
     excerpt: "MTI University hosted an international AI conference with experts from all over the world discussing the latest advancements in artificial intelligence and machine learning applications in education.",
     fullContent: `
 The two-day conference brought together over 450 researchers, professors, industry leaders and students from 28 countries.
@@ -155,10 +155,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
             <Share2 size={16} />
             Share
           </Button>
-          <Button variant="outline" size="sm" className="gap-2">
-            <Bookmark size={16} />
-            Save
-          </Button>
+          
           <Button variant="outline" size="sm" className="gap-2">
             <Heart size={16} />
             Like

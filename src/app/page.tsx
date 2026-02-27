@@ -10,6 +10,7 @@ import { ArrowRight, Bell } from 'lucide-react'
 
 import 'swiper/css'
 import 'swiper/css/pagination'
+import StarRating from '@/components/Rating'
 
 const newsList = [
   {
@@ -91,10 +92,10 @@ We look forward to welcoming you to the new semester!`
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 text-white">
                   {/*<h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight drop-shadow-2xl">
                     Campus<span className="text-indigo-400">Pulse</span>
-                  </h1>*/}
+                  </h1>
                   <p className="mt-6 text-xl md:text-2xl max-w-3xl font-light opacity-90">
                     Your university's central hub for real-time news, events and announcements.
-                  </p>
+                  </p>*/}
 
 
                 </div>
@@ -115,7 +116,7 @@ We look forward to welcoming you to the new semester!`
                     <Bell size={16} />
                     Important Announcement
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">
+                  <h2 className="text-2xl md:text-3xl font-bold text-red-400 dark:text-white mb-4">
                     Registration for the New Academic Semester is Now Open
                   </h2>
                 </div>
@@ -204,7 +205,7 @@ We look forward to welcoming you to the new semester!`
         </div>
       </section>
       {/* Explore Categories Section */}
-      <section className="py-16 md:py-20 px-6 bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950">
+      <section className="py-16 md:py-20 px-6 bg-linear-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
@@ -245,6 +246,13 @@ We look forward to welcoming you to the new semester!`
           </div>
         </div>
       </section>
+      {/* Experience rating card */}
+      <div className="mt-16 p-8 bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg">
+        <StarRating
+          
+         
+        />
+      </div>
     </div>
   )
 }

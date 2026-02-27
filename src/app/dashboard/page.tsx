@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Newspaper, Heart, MessageSquare, TrendingUp, ChevronRight } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { Newspaper, Heart, MessageSquare, TrendingUp, ChevronRight, User } from 'lucide-react'
 
 // Map slugs → nice labels (same as registration)
 const categoryLabels: Record<string, string> = {
@@ -26,21 +26,35 @@ const mockNews = [
 
 export default function DashboardPage() {
   const [userInterests, setUserInterests] = useState<string[]>([])
+  const [userName, setUserName] = useState<string>("Guest")
+  const [isGuest, setIsGuest] = useState<boolean>(true)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Load interests from localStorage (saved during registration)
-    const saved = localStorage.getItem('userNewsPreferences')
-    if (saved) {
+    // Load profile & interests from localStorage
+    const savedProfile = localStorage.getItem('userProfile')
+    const savedInterests = localStorage.getItem('userNewsPreferences')
+    const guestFlag = localStorage.getItem('isGuest') === 'true'
+
+    if (savedProfile) {
       try {
-        const parsed = JSON.parse(saved)
-        if (Array.isArray(parsed)) {
-          setUserInterests(parsed)
-        }
+        const parsed = JSON.parse(savedProfile)
+        if (parsed.name) setUserName(parsed.name)
+        setIsGuest(false)
+      } catch (err) {
+        console.error("Failed to load profile", err)
+      }
+    }
+
+    if (savedInterests) {
+      try {
+        const parsed = JSON.parse(savedInterests)
+        if (Array.isArray(parsed)) setUserInterests(parsed)
       } catch (err) {
         console.error("Failed to load interests", err)
       }
     }
+
     setLoading(false)
   }, [])
 
@@ -49,12 +63,12 @@ export default function DashboardPage() {
     userInterests.includes(item.category)
   )
 
-  // Mock "most interacted" — in real app you'd get this from backend
+  // Mock "most interacted" 
   const mostInteracted = [...mockNews]
     .sort((a, b) => (b.likes + b.comments) - (a.likes + a.comments))
     .slice(0, 6)
 
-  // Mock "recommended/trending"
+  // Mock "trending"
   const trending = [...mockNews].slice(0, 4)
 
   if (loading) {
@@ -68,12 +82,53 @@ export default function DashboardPage() {
     )
   }
 
+  // Guest mode UI
+  if (isGuest) {
+    return (
+      <div className="min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center px-6 py-16">
+        <div className="max-w-lg text-center space-y-8">
+          <div className="w-20 h-20 mx-auto rounded-full bg-indigo-100 dark:bg-indigo-950/50 flex items-center justify-center">
+            <User className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
+          </div>
+
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
+            Guest Mode
+          </h1>
+
+          <p className="text-lg text-slate-600 dark:text-slate-400">
+            You're currently browsing as a guest. Sign up or log in to unlock your personalized dashboard, save your interests, and get tailored news.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild>
+              <Link href="/auth/register">
+                Sign Up Free
+              </Link>
+            </Button>
+            <Button variant="outline" size="lg" asChild>
+              <Link href="/auth/login">
+                Login
+              </Link>
+            </Button>
+          </div>
+
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-6">
+            You can still browse news, categories, and announcements without an account.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // Logged-in user dashboard
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 mt-10">
         {/* Header */}
         <div className="mb-12 md:mb-16">
-         
+          <h1 className="text-4xl md:text-5xl font-extrabold bg-linear-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent mb-4">
+            Welcome back, {userName}
+          </h1>
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400">
             Personalized news based on your interests • {userInterests.length} categories selected
           </p>
@@ -81,7 +136,17 @@ export default function DashboardPage() {
 
         {/* Your Interests Section */}
         <section className="mb-16">
-         
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+              <Newspaper className="h-7 w-7 text-indigo-600" />
+              News You Chose
+            </h2>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/auth/register">
+                Change Interests
+              </Link>
+            </Button>
+          </div>
 
           {userInterests.length === 0 ? (
             <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-slate-200 dark:border-slate-700 rounded-2xl p-10 text-center">
@@ -118,21 +183,7 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {mostInteracted.map((news) => (
-              <NewsCard key={news.slug} news={news}  />
-            ))}
-          </div>
-        </section>
-
-        {/* Trending / Recommended */}
-        <section>
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-            <TrendingUp className="h-7 w-7 text-indigo-600" />
-            Trending on Campus
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {trending.map((news) => (
-              <NewsCard key={news.slug} news={news} compact />
+              <NewsCard key={news.slug} news={news} showInteraction />
             ))}
           </div>
         </section>
@@ -160,7 +211,7 @@ export default function DashboardPage() {
   )
 }
 
-// Reusable News Card component
+// Reusable News Card (unchanged from your code)
 function NewsCard({
   news,
   showInteraction = false,
@@ -173,7 +224,6 @@ function NewsCard({
   return (
     <Link href={`/news/${news.slug}`} className="block group">
       <div className={`bg-white dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${compact ? 'h-full flex flex-col' : ''}`}>
-        {/* Image placeholder */}
         <div className={`relative ${compact ? 'h-36' : 'h-48 md:h-56'} bg-linear-to-br from-indigo-100 to-blue-100 dark:from-slate-700 dark:to-slate-600`}>
           <div className="absolute inset-0 flex items-center justify-center text-slate-400 dark:text-slate-500 text-sm font-medium">
             [Image]

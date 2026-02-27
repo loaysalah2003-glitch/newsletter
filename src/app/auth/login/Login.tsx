@@ -27,7 +27,7 @@ export default function Login() {
 
     return (
         <div className='mt-30 mb-30'>
-            <h2 className='text-green-700 text-2xl text-center mb-6'>Login Now</h2>
+            <h2 className='text-green-700 text-3xl text-center font-bold mb-6'>Login Now</h2>
             <Form {...form}>
                 <form className='w-2/3 mx-auto' onSubmit={form.handleSubmit(onsubmit)}>
                     <FormField
@@ -50,7 +50,7 @@ export default function Login() {
                         control={form.control}
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className=''>Password</FormLabel>
+                                <FormLabel className='mt-5'>Password</FormLabel>
                                 <FormControl>
                                     <Input type='password' autoComplete='off' {...field} />
                                 </FormControl>

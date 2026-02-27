@@ -1,9 +1,24 @@
 'use client'
 
 import Link from "next/link"
-import { ArrowRight, Sparkles } from "lucide-react"
+import { ArrowRight, Sparkles, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useRouter } from 'next/navigation'
+
 export default function Welcome() {
+  const router = useRouter()
+
+  const handleGuest = () => {
+    // Mark as guest (we'll use this flag to allow browsing but block private pages)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isGuest', 'true')
+      localStorage.removeItem('userProfile') // ensure no old login data
+      localStorage.removeItem('userNewsPreferences')
+    }
+    // Go to home page
+    router.push('/')
+  }
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-indigo-50 via-purple-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950">
       {/* Background decoration */}
@@ -36,18 +51,20 @@ export default function Welcome() {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-6 sm:pt-10">
+            {/* Primary: Register */}
             <Link href="/auth/register">
-              <Button 
+              <Button
                 size="lg"
                 className="h-14 px-10 text-lg font-medium bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg shadow-indigo-500/20 transition-all duration-300 group"
               >
-                Get Started
+                Create Account
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
 
+            {/* Secondary: Login */}
             <Link href="/auth/login">
-              <Button 
+              <Button
                 variant="outline"
                 size="lg"
                 className="h-14 px-10 text-lg font-medium border-2 border-slate-300 dark:border-slate-600 hover:bg-white/80 dark:hover:bg-slate-800/80 backdrop-blur-sm transition-all duration-300"
@@ -56,12 +73,22 @@ export default function Welcome() {
               </Button>
             </Link>
           </div>
+          {/* Guest option */}
+          <Button
+            variant="ghost"
+            size="lg"
+            className="h-14 px-10 text-lg text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:bg-indigo-50/30 dark:hover:bg-indigo-950/30"
+            onClick={handleGuest}
+          >
+            Continue as Guest →
+          </Button>
 
-          {/* Trust signals / small text */}
+
+          {/* Small trust signals */}
           <div className="pt-8 md:pt-12 text-sm text-slate-500 dark:text-slate-400 flex flex-wrap justify-center gap-x-8 gap-y-3">
             <span>Real-time updates</span>
             <span className="hidden sm:inline">•</span>
-            <span>Personalized feed</span>
+            <span>Personalized feed (after signup)</span>
             <span className="hidden sm:inline">•</span>
             <span>Free for all students</span>
             <span className="hidden sm:inline">•</span>
