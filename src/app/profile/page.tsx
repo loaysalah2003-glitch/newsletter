@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Pencil, Save, Mail, Lock, Phone, GraduationCap, Newspaper, ShieldCheck, User } from "lucide-react"
+import { Pencil, Save, Mail, Lock, Phone, GraduationCap, Newspaper, User, LogOut, ArrowLeft } from "lucide-react"
 import Link from 'next/link'
 
-// Map category slugs → display names (same as in register page)
+// Category labels
 const categoryLabels: Record<string, string> = {
   events: "Campus Events",
   sports: "Sports",
@@ -33,7 +33,6 @@ export default function ProfilePage() {
   useEffect(() => {
     const savedProfile = localStorage.getItem('userProfile')
     const savedInterests = localStorage.getItem('userNewsPreferences')
-    const guestFlag = localStorage.getItem('isGuest') === 'true'
 
     if (savedProfile) {
       try {
@@ -50,20 +49,13 @@ export default function ProfilePage() {
           setUserMajor(majorMap[parsed.major] || parsed.major)
         }
         setIsGuest(false)
-      } catch (err) {
-        console.error("Failed to load profile data", err)
-      }
+      } catch (err) {}
     }
 
     if (savedInterests) {
       try {
-        const parsed = JSON.parse(savedInterests)
-        if (Array.isArray(parsed)) {
-          setInterests(parsed)
-        }
-      } catch (err) {
-        console.error("Failed to load news preferences", err)
-      }
+        setInterests(JSON.parse(savedInterests))
+      } catch (err) {}
     }
 
     setLoading(false)
@@ -81,253 +73,161 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50/70 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="min-h-screen bg-[#f8f5f0] flex items-center justify-center">
+        <div className="animate-spin h-12 w-12 border-4 border-zinc-900 border-t-transparent rounded-full"></div>
       </div>
     )
   }
 
-  // Guest mode UI
   if (isGuest) {
     return (
-      <div className="min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 flex items-center justify-center px-6 py-16">
+      <div className="min-h-screen bg-[#f8f5f0] dark:bg-slate-950 flex items-center justify-center px-6 py-16">
         <div className="max-w-lg text-center space-y-8">
-          <div className="w-20 h-20 mx-auto rounded-full bg-indigo-100 dark:bg-indigo-950/50 flex items-center justify-center">
-            <User className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
-          </div>
-
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
-            Guest Mode
-          </h1>
-
-          <p className="text-lg text-slate-600 dark:text-slate-400">
-            You're currently browsing as a guest. To view and edit your profile, save preferences, and unlock personalized features, please sign up or log in.
-          </p>
-
+          <User className="h-20 w-20 mx-auto text-zinc-400" />
+          <h1 className="text-4xl font-bold tracking-tight">Sign in to view your profile</h1>
+          <p className="text-lg text-zinc-600 dark:text-zinc-400">Personalize your experience, save preferences, and get tailored campus news.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/auth/register">
-                Sign Up Free
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/auth/login">
-                Login
-              </Link>
-            </Button>
+            <Button size="lg" asChild><Link href="/auth/register">Create Account</Link></Button>
+            <Button variant="outline" size="lg" asChild><Link href="/auth/login">Login</Link></Button>
           </div>
-
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-6">
-            You can still browse news, categories, and announcements without an account.
-          </p>
         </div>
       </div>
     )
   }
 
-  // Logged-in user profile
   return (
-    <div className="min-h-screen bg-slate-50/70 py-12 px-6 lg:px-8 mt-24">
-      <div className="mx-auto max-w-6xl">
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200/70 overflow-hidden">
+    <div className="min-h-screen bg-[#f8f5f0] dark:bg-slate-950 pb-20 mt-15">
 
-          {/* Header – dynamic name & major */}
-          <div className="px-8 pt-10 pb-12 border-b border-slate-100 bg-linear-to-r from-slate-50 to-white">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div className="flex items-center gap-6">
-                <div className="relative shrink-0">
-                  <div className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-white shadow-lg overflow-hidden bg-linear-to-br from-slate-100 to-slate-200">
-                    <img
-                      src="/profile-placeholder.png"
-                      alt="Profile picture"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <button className="absolute bottom-1 right-1 bg-white p-2 rounded-full shadow-md hover:bg-slate-50 transition-colors border border-slate-200">
-                    <Pencil size={16} className="text-slate-600" />
-                  </button>
+     
+
+      <div className="max-w-5xl mx-auto px-6 pt-12">
+        {/* Hero Profile Section */}
+        <div className="flex flex-col items-center text-center mb-16">
+          <div className="relative mb-6">
+            <div className="w-40 h-40 rounded-3xl overflow-hidden border-8 border-white shadow-2xl">
+              <img
+                src="/profile-placeholder.png"
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <button className="absolute bottom-3 right-3 bg-white p-3 rounded-2xl shadow-lg hover:scale-110 transition-all">
+              <Pencil size={20} className="text-zinc-700" />
+            </button>
+          </div>
+
+          <h1 className="text-5xl font-bold tracking-tight text-black dark:text-white">{userName}</h1>
+          <div className="flex items-center gap-2 mt-3 text-xl text-zinc-600 dark:text-zinc-400">
+            <GraduationCap className="h-6 w-6" />
+            {userMajor ? `${userMajor} Student` : "Student"}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column - Personal Info */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Email */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-800">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-950 rounded-2xl flex items-center justify-center">
+                  <Mail className="h-6 w-6 text-indigo-600" />
                 </div>
-
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
-                    {userName}
-                  </h1>
-                  <div className="mt-2 flex items-center gap-3 text-slate-600">
-                    <GraduationCap size={20} className="text-indigo-600" />
-                    <span className="text-lg font-medium">
-                      {userMajor ? `${userMajor} Student` : "Student"}
-                    </span>
-                  </div>
+                  <p className="text-sm text-zinc-500">Email Address</p>
+                  <p className="text-2xl font-medium">loayyasser@gmail.com</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-800">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-950 rounded-2xl flex items-center justify-center">
+                  <Phone className="h-6 w-6 text-emerald-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-zinc-500">Phone Number</p>
                 </div>
               </div>
 
-              <div className="flex gap-4 self-start md:self-center">
-                <Button variant="outline" size="lg" onClick={() => {
-                  localStorage.clear()
-                  router.push('/')
-                }}>
-                  Log Out
-                </Button>
+              {isEditingPhone ? (
+                <div className="flex gap-3">
+                  <Input
+                    value={tempPhone}
+                    onChange={(e) => setTempPhone(e.target.value)}
+                    className="text-2xl"
+                  />
+                  <Button onClick={handleSavePhone} className="px-8">Save</Button>
+                  <Button variant="outline" onClick={handleCancelPhone}>Cancel</Button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <p className="text-3xl font-medium tracking-tight">{phone}</p>
+                  <Button variant="outline" onClick={() => setIsEditingPhone(true)}>
+                    <Pencil className="mr-2 h-4 w-4" /> Edit
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {/* Password */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-800">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-rose-100 dark:bg-rose-950 rounded-2xl flex items-center justify-center">
+                  <Lock className="h-6 w-6 text-rose-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-zinc-500">Password</p>
+                  <p className="text-3xl tracking-widest">••••••••••••</p>
+                </div>
               </div>
+              <Button variant="outline" className="w-full">Change Password</Button>
             </div>
           </div>
 
-          {/* Main content */}
-          <div className="p-8 lg:p-10 space-y-10">
-            {/* Row 1: Email + Password */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Email */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2.5 bg-indigo-100 rounded-lg">
-                    <Mail size={20} className="text-indigo-600" />
-                  </div>
-                  <label className="text-lg font-semibold text-slate-800">
-                    Email Address
-                  </label>
+          {/* Right Column - Major + Interests */}
+          <div className="lg:col-span-5 space-y-8">
+            {/* Major */}
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-800 h-fit">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 bg-amber-100 dark:bg-amber-950 rounded-2xl flex items-center justify-center">
+                  <GraduationCap className="h-6 w-6 text-amber-600" />
                 </div>
-                <div className="flex items-center gap-4 bg-slate-50/80 rounded-xl p-4 border border-slate-200">
-                  <Input
-                    value="loayyasser@gmail.com"
-                    disabled
-                    className="bg-transparent border-none focus-visible:ring-0 text-slate-700 text-base flex-1"
-                  />
-                </div>
-              </div>
-
-              {/* Password */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2.5 bg-rose-100 rounded-lg">
-                    <Lock size={20} className="text-rose-600" />
-                  </div>
-                  <label className="text-lg font-semibold text-slate-800">
-                    Password
-                  </label>
-                </div>
-                <div className="flex items-center gap-4 bg-slate-50/80 rounded-xl p-4 border border-slate-200">
-                  <Input
-                    type="password"
-                    value="************"
-                    disabled
-                    className="bg-transparent border-none focus-visible:ring-0 text-slate-700 text-base flex-1"
-                  />
-                  <Button variant="outline" size="lg" className="whitespace-nowrap">
-                    Change Password
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Row 2: Major + Phone */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Major */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2.5 bg-amber-100 rounded-lg">
-                    <GraduationCap size={20} className="text-amber-600" />
-                  </div>
-                  <label className="text-lg font-semibold text-slate-800">
-                    Major / Faculty
-                  </label>
-                </div>
-                <div className="bg-slate-50/80 rounded-xl p-4 border border-slate-200">
-                  <Input
-                    value={userMajor || "Computer Science"}
-                    disabled
-                    className="bg-transparent border-none focus-visible:ring-0 text-slate-700 text-base"
-                  />
-                </div>
-              </div>
-
-              {/* Phone */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2.5 bg-emerald-100 rounded-lg">
-                    <Phone size={20} className="text-emerald-600" />
-                  </div>
-                  <label className="text-lg font-semibold text-slate-800">
-                    Phone Number
-                  </label>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-slate-50/80 rounded-xl p-4 border border-slate-200">
-                  <Input
-                    value={isEditingPhone ? tempPhone : phone}
-                    onChange={(e) => setTempPhone(e.target.value)}
-                    disabled={!isEditingPhone}
-                    className={
-                      "bg-transparent border-none focus-visible:ring-0 text-slate-700 text-base flex-1" +
-                      (isEditingPhone ? " bg-white border border-indigo-300 focus-visible:ring-2 focus-visible:ring-indigo-400" : "")
-                    }
-                  />
-
-                  {isEditingPhone ? (
-                    <div className="flex gap-3 w-full sm:w-auto">
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        onClick={handleCancelPhone}
-                        className="flex-1 sm:flex-none"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        size="lg"
-                        className="bg-indigo-600 hover:bg-indigo-700 flex-1 sm:flex-none"
-                        onClick={handleSavePhone}
-                      >
-                        <Save size={18} className="mr-2" />
-                        Save
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button
-                      variant="ghost"
-                      size="lg"
-                      className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 whitespace-nowrap"
-                      onClick={() => setIsEditingPhone(true)}
-                    >
-                      <Pencil size={18} className="mr-2" />
-                      Edit
-                    </Button>
-                  )}
+                <div>
+                  <p className="text-sm text-zinc-500">Major / Faculty</p>
+                  <p className="text-3xl font-medium">{userMajor || "Computer Science"}</p>
                 </div>
               </div>
             </div>
 
             {/* News Preferences */}
-            <div className="space-y-4 pt-8 border-t border-slate-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-purple-100 rounded-lg">
-                    <Newspaper size={20} className="text-purple-600" />
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-zinc-200 dark:border-zinc-800">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-purple-100 dark:bg-purple-950 rounded-2xl flex items-center justify-center">
+                    <Newspaper className="h-6 w-6 text-purple-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-800">
-                    My News Preferences
-                  </h3>
+                  <div>
+                    <p className="text-sm text-zinc-500">News Preferences</p>
+                    <p className="font-semibold text-xl">What I follow</p>
+                  </div>
                 </div>
-
                 <Button
                   variant="outline"
-                  size="sm"
                   onClick={() => router.push('/auth/register')}
                 >
-                  <Pencil size={16} className="mr-2 h-4 w-4" />
-                  Edit Preferences
+                  Edit
                 </Button>
               </div>
 
               {interests.length === 0 ? (
-                <div className="bg-slate-50 rounded-xl p-6 text-center text-slate-500 border border-slate-200">
-                  You haven't selected any news categories yet.
-                </div>
+                <p className="text-zinc-500 italic">No interests selected yet</p>
               ) : (
-                <div className="flex flex-wrap gap-2.5">
+                <div className="flex flex-wrap gap-3">
                   {interests.map((slug) => (
                     <div
                       key={slug}
-                      className="bg-indigo-50 text-indigo-800 px-4 py-2.5 rounded-full text-sm font-medium border border-indigo-100 shadow-sm"
+                      className="px-5 py-3 bg-zinc-100 dark:bg-zinc-800 text-sm font-medium rounded-2xl"
                     >
                       {categoryLabels[slug] || slug}
                     </div>
@@ -335,6 +235,20 @@ export default function ProfilePage() {
                 </div>
               )}
             </div>
+
+            {/* Logout */}
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:hover:bg-red-950"
+              onClick={() => {
+                localStorage.clear()
+                router.push('/')
+              }}
+            >
+              <LogOut className="mr-3 h-5 w-5" />
+              Log Out
+            </Button>
           </div>
         </div>
       </div>

@@ -22,6 +22,7 @@ const allNews = [
     excerpt: "Students participated in various sports competitions during the annual sports day...",
     date: "Nov 20, 2025",
     category: "Sports",
+    image: "/news/fun-day-hero.jpg",
   },
   {
     slug: "fun-day",

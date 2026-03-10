@@ -124,3 +124,24 @@
   }
 }
 
+/* === 3D Revolving MTI Logo === */
+.logo-3d {
+  transform-style: preserve-3d;
+  animation: revolveLogo 28s linear infinite;
+  transition: all 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.logo-3d:hover {
+  animation-play-state: paused;
+  transform: rotateY(35deg) rotateX(18deg) translateZ(50px) !important;
+  box-shadow: 0 45px 90px -20px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes revolveLogo {
+  from {
+    transform: rotateY(0deg) rotateX(7deg);
+  }
+  to {
+    transform: rotateY(360deg) rotateX(7deg);
+  }
+}

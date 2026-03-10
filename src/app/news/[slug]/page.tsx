@@ -4,15 +4,15 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, CalendarDays, Clock, Share2, Bookmark, Heart } from "lucide-react"
+import { ArrowLeft, Calendar, Clock, Share2, Heart, Bookmark, User } from "lucide-react"
 
-// Your news data (same slugs as home page)
+// Your news data
 const newsData = [
   {
     slug: "ai-conference",
-    title: "AI Conference at MTI",
+    title: "AI Conference at MTI Draws Global Experts",
     category: "Technology",
-    date: "January 15, 2026",
+    date: "February 28, 2026",
     readTime: "8 min read",
     author: "Dr. Hesham ElDeeb",
     excerpt: "MTI University hosted an international AI conference with experts from all over the world discussing the latest advancements in artificial intelligence and machine learning applications in education.",
@@ -27,13 +27,14 @@ Key highlights:
 
 The event concluded with the signing of 4 international collaboration agreements and a student hackathon prize ceremony.
     `,
-    image: "/public/slider/university1.webp", // add real image later
+    image: "/newsimage/conference.jpg"
   },
   {
     slug: "sports-day",
-    title: "Annual Sports Day",
+    title: "MTI Wins Big at Annual Inter-University Sports Day",
     category: "Sports",
-    date: "November 20, 2025",
+    date: "February 25, 2026",
+    readTime: "6 min read",
     author: "Sports Committee",
     excerpt: "Students participated in various sports competitions during the annual sports day, promoting teamwork, health, and university spirit across all faculties.",
     fullContent: `
@@ -47,13 +48,14 @@ Events included:
 
 Winners received trophies and medals during the closing ceremony attended by the university president and deans.
     `,
-    image: "/news/sports-day-hero.jpg",
+    image: "/newsimage/sport.jpg",
   },
   {
     slug: "fun-day",
-    title: "Annual Fun Day",
+    title: "Annual Fun Day Brings Record Attendance",
     category: "Campus Life",
-    date: "December 5, 2025",
+    date: "February 22, 2026",
+    readTime: "5 min read",
     author: "Student Activities",
     excerpt: "A day full of games, music, food stalls and entertainment for all students and staff.",
     fullContent: `
@@ -66,12 +68,11 @@ The annual Fun Day featured:
 
 Over 2,000 attendees enjoyed a relaxing day of laughter and community bonding.
     `,
-    image: "/news/fun-day-hero.jpg",
+    image: "/newsimage/funday.jpg"
   },
 ]
 
 export default async function NewsDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  // This line is the fix: await params!
   const { slug } = await params
 
   const article = newsData.find((item) => item.slug === slug)
@@ -80,115 +81,139 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
     notFound()
   }
 
-  // Optional: related articles (exclude current one)
   const related = newsData.filter((item) => item.slug !== slug).slice(0, 3)
 
   return (
-    <div className="relative min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
-      {/* Hero */}
-      <div className="relative h-[50vh] min-h-100 w-full overflow-hidden">
-        {article.image ? (
-          <Image
-            src={article.image}
-            alt={article.title}
-            fill
-            className="object-cover brightness-[0.65]"
-            priority
-          />
-        ) : (
-          <div className="absolute inset-0 bg-linear-to-br from-indigo-600 to-blue-800" />
-        )}
-
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/50 to-transparent" />
-
-        <div className="absolute inset-0 flex flex-col justify-end px-6 pb-12 md:px-12 md:pb-16 text-white">
-          <div className="max-w-5xl mx-auto w-full">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-sm font-medium mb-6">
-              {article.category}
-            </div>
-
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight drop-shadow-2xl">
-              {article.title}
-            </h1>
-
-            <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm md:text-base opacity-90">
-              <div className="flex items-center gap-2">
-                <CalendarDays size={18} />
-                {article.date}
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <span>By</span>
-                <span className="font-medium">{article.author}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 py-12 md:py-16">
+    <div className="min-h-screen bg-[#f8f5f0] dark:bg-slate-950 font-serif">
+      <div className="max-w-5xl mx-auto px-6 pt-12 pb-24">
+        {/* Back Button */}
         <Button
           variant="ghost"
-          className="mb-10 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+          className="mb-8 text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white flex items-center gap-2"
           asChild
         >
-          <Link href="/" className="flex items-center gap-2">
-            <ArrowLeft size={18} />
-            Back to Home
+          <Link href="/">
+            <ArrowLeft size={18} /> Back to Edition
           </Link>
         </Button>
 
-        <article className="prose prose-lg dark:prose-invert max-w-none">
-          <p className="lead text-xl md:text-2xl text-slate-700 dark:text-slate-300 mb-10 font-medium">
-            {article.excerpt}
-          </p>
+        {/* Hero / Lead Image + Headline */}
+        <div className="relative h-130 md:h-155 rounded-3xl overflow-hidden mb-12 shadow-2xl">
+          {article.image ? (
+            <Image
+              src={article.image}
+              alt={article.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          ) : (
+            <div className="absolute inset-0 bg-linear-to-br from-zinc-800 to-black" />
+          )}
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent" />
 
-          <div className="whitespace-pre-line leading-relaxed text-slate-800 dark:text-slate-200">
-            {article.fullContent}
+          <div className="absolute bottom-0 left-0 right-0 p-10 md:p-16 text-white">
+            <div className="uppercase text-xs tracking-[4px] font-medium mb-4 opacity-90">
+              {article.category.toUpperCase()}
+            </div>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-none tracking-tight drop-shadow-2xl">
+              {article.title}
+            </h1>
+
+            <div className="mt-8 flex items-center gap-6 text-sm md:text-base opacity-90">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                {article.date}
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                {article.readTime}
+              </div>
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                By {article.author}
+              </div>
+            </div>
           </div>
-        </article>
-
-        {/* Share buttons */}
-        <div className="flex flex-wrap items-center gap-6 mt-12 pt-10 border-t border-slate-200 dark:border-slate-800">
-          <Button variant="outline" size="sm" className="gap-2">
-            <Share2 size={16} />
-            Share
-          </Button>
-          
-          <Button variant="outline" size="sm" className="gap-2">
-            <Heart size={16} />
-            Like
-          </Button>
         </div>
 
-        {/* Related articles */}
-        {related.length > 0 && (
-          <div className="mt-16 pt-12 border-t border-slate-200 dark:border-slate-800">
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">
-              Related Articles
-            </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Main Article Column */}
+          <div className="lg:col-span-8">
+            <article className="prose prose-zinc dark:prose-invert max-w-none text-[17px] leading-relaxed">
+              {/* Lead / Excerpt with drop-cap */}
+              <p className="first-letter:text-7xl first-letter:font-bold first-letter:text-black first-letter:dark:text-white first-letter:float-left first-letter:mr-4 first-letter:-mt-2 text-2xl font-medium text-zinc-800 dark:text-zinc-200">
+                {article.excerpt}
+              </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="whitespace-pre-line mt-10 text-zinc-800 dark:text-zinc-200">
+                {article.fullContent}
+              </div>
+            </article>
+
+            {/* Action Bar */}
+            <div className="mt-16 flex items-center gap-4 border-t border-zinc-300 dark:border-zinc-700 pt-8">
+              <Button variant="outline" size="lg" className="gap-3 text-base">
+                <Bookmark className="h-5 w-5" /> Save for Later
+              </Button>
+              <Button variant="outline" size="lg" className="gap-3 text-base">
+                <Share2 className="h-5 w-5" /> Share
+              </Button>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-4 lg:sticky lg:top-24 lg:self-start space-y-10">
+            <div className="bg-white dark:bg-slate-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-8">
+              <div className="uppercase text-xs tracking-widest text-zinc-500 mb-3">About the Author</div>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center">
+                  <User className="h-6 w-6" />
+                </div>
+                <div>
+                  <p className="font-semibold">{article.author}</p>
+                  <p className="text-xs text-zinc-500">Faculty of computer science</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-xs uppercase tracking-widest text-zinc-500 border-t border-zinc-300 dark:border-zinc-700 pt-6">
+              This article was originally published in the CampusPulse Daily Edition
+            </div>
+          </div>
+        </div>
+
+        {/* Related Articles */}
+        {related.length > 0 && (
+          <div className="mt-24 pt-12 border-t border-zinc-300 dark:border-zinc-700">
+            <div className="uppercase text-xs tracking-[2px] font-medium text-zinc-500 mb-8">
+              More Stories from CampusPulse
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {related.map((rel) => (
                 <Link
                   key={rel.slug}
                   href={`/news/${rel.slug}`}
-                  className="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                  className="group"
                 >
-                  <div className="relative h-40 bg-linear-to-br from-indigo-100 to-blue-100 dark:from-slate-700 dark:to-slate-600">
-                    <div className="absolute inset-0 flex items-center justify-center text-slate-400 dark:text-slate-500 text-xs font-medium">
-                      [Image]
-                    </div>
+                  <div className={`aspect-video w-full rounded-2xl bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-slate-700 dark:to-slate-800 mb-5 overflow-hidden`}>
+                    {rel.image && (
+                      <Image
+                        src={rel.image}
+                        alt={rel.title}
+                        width={600}
+                        height={340}
+                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                      />
+                    )}
                   </div>
-                  <div className="p-5">
-                    <h3 className="font-semibold text-slate-900 dark:text-white line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                      {rel.title}
-                    </h3>
-                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
-                      {rel.excerpt}
-                    </p>
-                  </div>
+                  <h3 className="font-semibold text-2xl leading-tight group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-colors line-clamp-3">
+                    {rel.title}
+                  </h3>
+                  <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2">
+                    {rel.excerpt}
+                  </p>
                 </Link>
               ))}
             </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Newspaper } from "lucide-react"
+import { Calendar, ArrowRight } from "lucide-react"
 
 const categories = [
   {
@@ -10,9 +10,21 @@ const categories = [
     title: "Technology",
     description: "Latest innovations, AI research, cybersecurity, and digital transformation on campus.",
     news: [
-      { title: "AI Research Breakthrough", excerpt: "New AI models developed by university researchers..." },
-      { title: "Cybersecurity Workshop", excerpt: "A hands-on workshop focused on modern security threats..." },
-      { title: "New Computer Labs", excerpt: "State-of-the-art labs opened for CS students..." },
+      { 
+        title: "AI Research Breakthrough", 
+        excerpt: "New AI models developed by university researchers promise to revolutionise personalised learning.",
+        image: "/news/ai-research.jpg" 
+      },
+      { 
+        title: "Cybersecurity Workshop", 
+        excerpt: "Hands-on session equips students with tools to defend against modern digital threats.",
+        image: "/news/cyber-workshop.jpg" 
+      },
+      { 
+        title: "New Computer Labs", 
+        excerpt: "State-of-the-art labs with latest hardware now open for Computer Science students.",
+        image: "/news/new-labs.jpg" 
+      },
     ],
   },
   {
@@ -20,86 +32,104 @@ const categories = [
     title: "Sports",
     description: "University teams, tournaments, fitness events, and campus sports life.",
     news: [
-      { title: "Annual Sports Day", excerpt: "Students competed in various athletic events..." },
-      { title: "Football Team Wins", excerpt: "The university football team secured first place..." },
-      { title: "New Gym Facilities", excerpt: "Modern gym equipment now available for students..." },
+      { 
+        title: "Annual Sports Day", 
+        excerpt: "Record participation as students compete across 15 different athletic events.",
+        image: "/news/sports-day.jpg" 
+      },
+      { 
+        title: "Football Team Wins", 
+        excerpt: "MTI football team defeats Cairo University 3-2 in thrilling final.",
+        image: "/news/football-win.jpg" 
+      },
+      { 
+        title: "New Gym Facilities", 
+        excerpt: "Modern gym and fitness centre now open 24/7 for all students and staff.",
+        image: "/news/new-gym.jpg" 
+      },
     ],
   },
 ]
 
 export default function CategoriesPage() {
   return (
-    <div className="relative min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-16 md:py-20 px-5 sm:px-8 lg:px-12">
-      {/* Background decoration */}
-      <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-purple-400/10 rounded-full blur-3xl animate-pulse-slow delay-2000" />
-      </div>
+    <div className="min-h-screen bg-[#f8f5f0] dark:bg-slate-950 font-serif mt-20">
 
-      <div className="relative z-10 max-w-7xl mx-auto">
+
+      <div className="max-w-6xl mx-auto px-6 py-16">
         {/* Page Header */}
-        <div className="text-center mb-16 md:mb-20">
-         
-
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight bg-linear-to-r from-indigo-600 via-purple-600 to-blue-600 bg-clip-text text-transparent mb-5">
-            Categories
-          </h1>
-
-          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            Discover the latest news and updates in the areas that interest you most.
+        <div className="border-b border-zinc-300 dark:border-zinc-700 pb-10 mb-16">
+          <div className="uppercase text-xs tracking-[4px] text-zinc-500 mb-3">INSIDE TODAY’S PAPER</div>
+          <h1 className="text-6xl font-bold tracking-tight text-black dark:text-white">Categories &amp; Sections</h1>
+          <p className="mt-4 text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl">
+            Find the stories that matter to you. Browse by section or dive straight into the latest updates.
           </p>
         </div>
 
         {/* Categories */}
-        <div className="space-y-16 md:space-y-20">
+        <div className="space-y-20">
           {categories.map((category) => (
-            <section key={category.slug} className="space-y-8">
-              {/* Category Header */}
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <section key={category.slug} className="border-b border-zinc-300 dark:border-zinc-700 pb-16 last:border-none last:pb-0">
+              {/* Section Header */}
+              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
                 <div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
+                  <div className="uppercase tracking-[3px] text-xs text-zinc-500 mb-2">SECTION</div>
+                  <h2 className="text-5xl font-bold text-black dark:text-white tracking-tight">
                     {category.title}
                   </h2>
-                  <p className="mt-3 text-lg text-slate-600 dark:text-slate-400 max-w-xl">
-                    {category.description}
-                  </p>
                 </div>
 
                 <Button
                   variant="outline"
-                  className="border-indigo-200 dark:border-indigo-800/50 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50"
+                  size="lg"
+                  className="border-2 border-black dark:border-white text-base px-8 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
                   asChild
                 >
                   <Link href={`/categories/${category.slug}`}>
-                    Explore all {category.title} →
+                    All {category.title} Stories →
                   </Link>
                 </Button>
               </div>
 
-              {/* Horizontal scrollable news preview */}
-              <div className="overflow-x-auto pb-6 scrollbar-hide">
-                <div className="flex gap-6 min-w-max">
+              <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-3xl mb-10">
+                {category.description}
+              </p>
+
+              {/* Horizontal News Previews – Newspaper Style */}
+              <div className="overflow-x-auto pb-8 scrollbar-hide">
+                <div className="flex gap-8 min-w-max">
                   {category.news.map((item, idx) => (
-                    <div
+                    <Link
                       key={idx}
-                      className="w-80 shrink-0 bg-white dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/70 dark:border-slate-700/50 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                      href={`/news/${category.slug}-${idx}`} // you can improve slug logic later
+                      className="group block w-80 shrink-0"
                     >
-                      {/* Image placeholder */}
-                      <div className="relative h-48 bg-linear-to-br from-indigo-100 to-blue-100 dark:from-slate-700 dark:to-slate-600">
-                        <div className="absolute inset-0 flex items-center justify-center text-slate-400 dark:text-slate-500 text-sm font-medium">
-                          [News Image]
-                        </div>
+                      <div className="relative h-56 bg-zinc-200 dark:bg-zinc-800 overflow-hidden border border-zinc-300 dark:border-zinc-700 rounded-none">
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center text-xs text-zinc-400 tracking-widest">
+                            [PHOTO]
+                          </div>
+                        )}
                       </div>
 
-                      <div className="p-6">
-                        <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-3 line-clamp-2">
+                      <div className="mt-6">
+                        <h3 className="font-bold text-2xl leading-tight text-black dark:text-white group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-colors line-clamp-3">
                           {item.title}
                         </h3>
-                        <p className="text-slate-600 dark:text-slate-300 text-base line-clamp-3">
+                        <p className="mt-4 text-[15px] text-zinc-600 dark:text-zinc-400 line-clamp-4 leading-relaxed">
                           {item.excerpt}
                         </p>
+                        <div className="mt-6 text-xs uppercase tracking-[2px] text-zinc-500 group-hover:text-black dark:group-hover:text-white">
+                          READ FULL STORY →
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
